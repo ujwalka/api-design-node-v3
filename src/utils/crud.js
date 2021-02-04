@@ -1,5 +1,11 @@
+// item.model >> Creating Generic CRUD controllers for all the models [3]
+// Closures, the async fn has access to the model
+
 export const getOne = model => async (req, res) => {
   try {
+    // Crawling the model for one item, _id created by mongoose?
+    // exec() is sort of like a return for the promise created for the model data
+    // lean() converts the data to json, or trims spaces?? not sure..
     const doc = await model
       .findOne({ createdBy: req.user._id, _id: req.params.id })
       .lean()
@@ -8,10 +14,15 @@ export const getOne = model => async (req, res) => {
     if (!doc) {
       return res.status(400).end()
     }
+    // Retrives and responds with a status 200 and '{ data: doc }' avoids namespace issues
+    // Returned as a json to pass the test, can be passed directly as 'doc'
+    // Status is 200 by defualt for good responses, explicitly setting status for tests
+    // The status codes have no consequence in dev env, however they help browser handle responses effectively
 
     res.status(200).json({ data: doc })
   } catch (e) {
     console.error(e)
+    // end() or send() is mandatory to end the response
     res.status(400).end()
   }
 }
@@ -31,6 +42,7 @@ export const getMany = model => async (req, res) => {
 }
 
 export const createOne = model => async (req, res) => {
+  // user._id auto-created by mongoDB
   const createdBy = req.user._id
   try {
     const doc = await model.create({ ...req.body, createdBy })
@@ -50,6 +62,7 @@ export const updateOne = model => async (req, res) => {
           _id: req.params.id
         },
         req.body,
+        // ***********Does not update the object without new:true***********
         { new: true }
       )
       .lean()
@@ -83,6 +96,8 @@ export const removeOne = model => async (req, res) => {
     res.status(400).end()
   }
 }
+
+// Exporting Generic CRUD controllers [4] >> respective routers
 
 export const crudControllers = model => ({
   removeOne: removeOne(model),

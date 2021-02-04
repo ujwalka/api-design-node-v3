@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-
+// Creating Schema for Item, validation? [1]
 const itemSchema = new mongoose.Schema(
   {
     name: {
@@ -29,7 +29,8 @@ const itemSchema = new mongoose.Schema(
   },
   { timestamps: true }
 )
+// Compound ID.. need more reading
 
 itemSchema.index({ list: 1, name: 1 }, { unique: true })
-
+// Export Item Schema as a Model [2] >> utils/crud.js, creating crudcontrollers
 export const Item = mongoose.model('item', itemSchema)

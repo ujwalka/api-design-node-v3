@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
-
+import bcrypt from 'bcrypt' // For passwords
+// Item and List models had much less complexity, What are those functions after the Schema??
+// User Schema definition [_1]
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -50,6 +51,7 @@ userSchema.pre('save', function(next) {
   })
 })
 
+// Compare passwords/ check password
 userSchema.methods.checkPassword = function(password) {
   const passwordHash = this.password
   return new Promise((resolve, reject) => {
@@ -63,4 +65,5 @@ userSchema.methods.checkPassword = function(password) {
   })
 }
 
+// User Schema exported as model
 export const User = mongoose.model('user', userSchema)

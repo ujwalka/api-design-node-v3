@@ -23,6 +23,7 @@ app.post('/signin', signin)
 
 app.use('/api', protect)
 app.use('/api/user', userRouter)
+// Item router in server [6]
 app.use('/api/item', itemRouter)
 app.use('/api/list', listRouter)
 
